@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/hecki97/Aegir-Backend#readme",
   "dependencies": {
-    
+    "express": "^4.17.1"
   }
 }
