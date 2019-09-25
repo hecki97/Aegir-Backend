@@ -3,7 +3,7 @@ const superagent = require('superagent');
 const cors = require('cors');
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 443;
 
 app.use(cors({
   // Allows the resource to be accessed by any domain in a cross-site manner.
@@ -11,6 +11,7 @@ app.use(cors({
   // Only allow GET and POST requests
   methods: ['GET', 'POST'],
 }));
+
 
 app.get('/api/bing', async (req, res) => {
   const response = await superagent.get('https://www.bing.com/HPImageArchive.aspx').query({
