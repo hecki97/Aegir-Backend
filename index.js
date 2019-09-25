@@ -12,6 +12,9 @@ app.use(cors({
   methods: ['GET', 'POST'],
 }));
 
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
 
 app.get('/api/bing', async (req, res) => {
   const response = await superagent.get('https://www.bing.com/HPImageArchive.aspx').query({
