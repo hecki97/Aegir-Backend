@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/hecki97/Aegir-Backend#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "superagent": "^5.1.0"
   },
   "devDependencies": {
     "eslint": "^6.4.0",
