@@ -1,9 +1,16 @@
 const express = require('express');
 const superagent = require('superagent');
 const cors = require('cors');
+const mongoose = require('mongoose');
+
 
 const app = express();
 const port = process.env.PORT || 3000;
+const mongoDBUrl = process.env.MONGODB_URL || 'mongodb://<user>:<pass>@<conn>/<db>';
+
+mongoose.connect(mongoDBUrl);
+const { db } = mongoose.db;
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 app.use(cors({
   // Allows the resource to be accessed by any domain in a cross-site manner.
