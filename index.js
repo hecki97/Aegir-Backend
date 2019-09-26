@@ -3,14 +3,21 @@ const superagent = require('superagent');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
+const BingPotD = require('./models/bing-potd.model');
 
 const app = express();
 const port = process.env.PORT || 3000;
 const mongoDBUrl = process.env.MONGODB_URL || 'mongodb://<user>:<pass>@<conn>/<db>';
 
-mongoose.connect(mongoDBUrl);
-const { db } = mongoose.db;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+mongoose.connect(mongoDBUrl, { useNewUrlParser: true });
+const db = mongoose.connection;
+
+db.on('error', console.error.bind(console, 'connection error:'));
+
+db.once('open', () => {
+  // we're connected!
+  console.log('connected!');
+});
 
 app.use(cors({
   // Allows the resource to be accessed by any domain in a cross-site manner.
@@ -18,6 +25,39 @@ app.use(cors({
   // Only allow GET and POST requests
   methods: ['GET', 'POST'],
 }));
+
+app.use(express.json()); // to support JSON-encoded bodies
+
+app.post('/bing-pic-of-the-day', (req, res) => {
+  const picOfTheDay = new BingPotD({
+    title: req.body.title,
+    description: req.body.copyright,
+    url: `https://www.bing.com${req.body.url}`,
+    copyright: req.body.copyrightlink,
+    hash: req.body.hsh,
+  });
+
+  picOfTheDay.save((err) => {
+    if (err) {
+      console.error(err);
+      res.status(500).end();
+    }
+    res.status(200);
+  });
+});
+
+app.get('/bing-pic-of-the-day', cors({ methods: 'GET', origin: '*' }), (req, res) => {
+  BingPotD.find({})
+    .sort({ date: 'desc' })
+    .limit(20)
+    .exec((err, posts) => {
+      if (err) {
+        console.error(err);
+        res.status(500).end();
+      }
+      return res.send(posts);
+    });
+});
 
 app.get('/api/bing', async (req, res) => {
   const response = await superagent.get('https://www.bing.com/HPImageArchive.aspx').query({
