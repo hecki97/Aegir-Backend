@@ -1,0 +1,18 @@
+doctype xml
+rss(version='2.0', xmlns:atom='<a href="http://www.w3.org/2005/Atom" rel="nofollow">http://www.w3.org/2005/Atom</a>')
+  channel
+    title Bing Picture of the Day
+    link <a href="https://aegir-backend.herokuapp.com" rel="nofollow">https://aegir-backend.herokuapp.com</a>
+    atom:link(href='<a href="https://aegir-backend.herokuapp.com/bing/feed/rss" rel="nofollow">https://aegir-backend.herokuapp.com/bing/feed/rss</a>', rel='self', type='application/rss+xml')
+    description Get the latest Bing picture of the day with this handsy RSS feed
+    language en-US
+    copyright This is a third-party app that is in no way affiliated with or endorsed by Microsoft or Bing
+    if items.length
+      lastBuildDate=new Date(items[0].date).toUTCString()
+    each item in items
+      item
+        title=item.title
+        link <a href="#{item.url}" rel="nofollow">#{item.url}</a>
+        description=item.description
+        pubDate=new Date(item.date).toUTCString()
+        guid(isPermaLink='false') <a href="#{item.copyright}" rel="nofollow">#{item.copyright}</a>

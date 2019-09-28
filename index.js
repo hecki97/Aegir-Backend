@@ -44,7 +44,7 @@ app.post('/bing-pic-of-the-day', (req, res) => {
   });
 });
 
-app.get('/bing-pic-of-the-day', cors({ methods: 'GET', origin: '*' }), (req, res) => {
+app.get('/bing-potd/feed', cors({ methods: 'GET', origin: '*' }), (req, res) => {
   BingPotD.find({})
     .sort({ date: 'desc' })
     .limit(20)
@@ -53,11 +53,11 @@ app.get('/bing-pic-of-the-day', cors({ methods: 'GET', origin: '*' }), (req, res
         console.error(err);
         res.status(500).end();
       }
-      return res.send(posts);
+      return res.render('rss', { items: posts });
     });
 });
 
-app.get('/api/bing', async (req, res) => {
+app.get('/bing-potd/feed', async (req, res) => {
   const response = await superagent.get('https://www.bing.com/HPImageArchive.aspx').query({
     format: 'js', idx: 0, n: 8, mkt: 'en-US',
   });
