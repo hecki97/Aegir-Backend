@@ -9,15 +9,11 @@ const app = express();
 const port = process.env.PORT || 3000;
 const mongoDBUrl = process.env.MONGODB_URL || 'mongodb://<user>:<pass>@<conn>/<db>';
 
-mongoose.connect(mongoDBUrl, { useNewUrlParser: true });
+mongoose.connect(mongoDBUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'connection error:'));
-
-db.once('open', () => {
-  // we're connected!
-  console.log('connected!');
-});
+db.once('open', () => console.log('Successfully connected to MongoDB!'));
 
 app.use(cors({
   // Allows the resource to be accessed by any domain in a cross-site manner.
@@ -27,6 +23,8 @@ app.use(cors({
 }));
 
 app.use(express.json()); // to support JSON-encoded bodies
+
+app.set('view engine', 'pug');
 
 app.post('/bing-pic-of-the-day', (req, res) => {
   const picOfTheDay = new BingPotD({
@@ -73,5 +71,5 @@ app.get('/api/bing', async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Runnning on ${port}`);
+  console.log(`Backend running on ${port}`);
 });
