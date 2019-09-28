@@ -26,7 +26,7 @@ app.use(express.json()); // to support JSON-encoded bodies
 
 app.set('view engine', 'pug');
 
-app.post('/bing-pic-of-the-day', (req, res) => {
+app.post('/bing-potd/feed', async (req, res) => {
   const picOfTheDay = new BingPotD({
     title: req.body.title,
     description: req.body.copyright,
@@ -35,13 +35,13 @@ app.post('/bing-pic-of-the-day', (req, res) => {
     hash: req.body.hsh,
   });
 
-  picOfTheDay.save((err) => {
+  await picOfTheDay.save((err) => {
     if (err) {
       console.error(err);
       res.status(500).end();
     }
-    res.status(200);
   });
+  res.status(200);
 });
 
 app.get('/bing-potd/feed', cors({ methods: 'GET', origin: '*' }), (req, res) => {
