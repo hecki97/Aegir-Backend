@@ -14,4 +14,4 @@ rss(version='2.0')
         link <a href="#{item.url}" rel="nofollow">#{item.url}</a>
         description=item.description
         pubDate=new Date(item.date).toUTCString()
-        guid(isPermaLink='false') <a href="#{item.copyright}" rel="nofollow">#{item.copyright}</a>
+        guid(isPermaLink='false')=item.hash
