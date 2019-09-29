@@ -53,6 +53,9 @@ app.get('/bing-potd/feed', cors({ methods: 'GET', origin: '*' }), (req, res) => 
         console.error(err);
         res.status(500).end();
       }
+
+      // Set appropriate conent type for rss.
+      res.type('application/rss+xml');
       return res.render('rss', { items: posts });
     });
 });
