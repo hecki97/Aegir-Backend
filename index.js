@@ -57,19 +57,6 @@ app.get('/bing-potd/feed', cors({ methods: 'GET', origin: '*' }), (req, res) => 
     });
 });
 
-app.get('/bing-potd/feed', async (req, res) => {
-  const response = await superagent.get('https://www.bing.com/HPImageArchive.aspx').query({
-    format: 'js', idx: 0, n: 8, mkt: 'en-US',
-  });
-
-  if (response.error) {
-    console.error(response.error);
-    res.status(500).end();
-  }
-
-  res.send(response.body.images);
-});
-
 app.listen(port, () => {
   console.log(`Backend running on ${port}`);
 });
