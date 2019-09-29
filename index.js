@@ -35,13 +35,13 @@ app.post('/bing-potd/feed', async (req, res) => {
     hash: req.body.hsh,
   });
 
-  await picOfTheDay.save((err) => {
-    if (err) {
-      console.error(err);
-      res.status(500).end();
-    }
-  });
-  res.status(200);
+  try {
+    await picOfTheDay.save();
+    res.status(200).end();
+  } catch (err) {
+    console.error(err);
+    res.status(500).end();
+  }
 });
 
 app.get('/bing-potd/feed', cors({ methods: 'GET', origin: '*' }), (req, res) => {
