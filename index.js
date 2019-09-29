@@ -8,6 +8,7 @@ const BingPotD = require('./models/bing-potd.model');
 const app = express();
 const port = process.env.PORT || 3000;
 const mongoDBUrl = process.env.MONGODB_URL || 'mongodb://<user>:<pass>@<conn>/<db>';
+const postSecret = process.env.POST_SECRET || '<post-secret>';
 
 mongoose.connect(mongoDBUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
