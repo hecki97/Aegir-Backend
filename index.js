@@ -88,22 +88,19 @@ app.post('/bing/pic-of-the-day/feed', async (req, res) => {
   }
 });
 
-app.get('/bing/pic-of-the-day/feed', cors({ methods: 'GET', origin: '*' }), (req, res) => {
-  // Select all items in collection, sort in descending order by date and limit to 20 entries
-  BingPotD.find({})
-    .sort({ date: 'desc' })
-    .limit(20)
-    .exec((err, posts) => {
-      if (err) {
-        console.error(err);
-        res.sendStatus(500);
-      }
+app.get('/bing/pic-of-the-day/feed', cors({ methods: 'GET', origin: '*' }), async (req, res) => {
+  try {
+    // Select all items in collection, sort in descending order by date and limit to 20 entries
+    const posts = await BingPotD.find({}).sort({ date: 'desc' }).limit(20);
 
-      // Set appropriate conent type for rss.
-      res.type('application/rss+xml');
-      // Render RSS feed using the template in views/rss
-      return res.render('rss', { items: posts });
-    });
+    // Set appropriate conent type for rss.
+    res.type('application/rss+xml');
+    // Render RSS feed using the template in views/rss
+    res.render('rss', { items: posts });
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
 });
 
 app.listen(port, () => {
