@@ -26,7 +26,12 @@ app.use(express.json()); // to support JSON-encoded bodies
 
 app.set('view engine', 'pug');
 
-app.post('/bing-potd/feed', async (req, res) => {
+app.post('/bing/pic-of-the-day/feed', async (req, res) => {
+  // Only proceed if the body holds a secret AND the secret matches *exactly* the stored secret!
+  if (!(app.body.secret && postSecret.localeCompare(app.body.secret) === 0)) {
+    res.status(401).end();
+  }
+
   const picOfTheDay = new BingPotD({
     title: req.body.title,
     description: req.body.copyright,
@@ -44,7 +49,8 @@ app.post('/bing-potd/feed', async (req, res) => {
   }
 });
 
-app.get('/bing-potd/feed', cors({ methods: 'GET', origin: '*' }), (req, res) => {
+app.get('/bing/pic-of-the-day/feed', cors({ methods: 'GET', origin: '*' }), (req, res) => {
+  // Select all items in collection, sort in descending order by date and limit to 20 entries
   BingPotD.find({})
     .sort({ date: 'desc' })
     .limit(20)
@@ -56,6 +62,7 @@ app.get('/bing-potd/feed', cors({ methods: 'GET', origin: '*' }), (req, res) => 
 
       // Set appropriate conent type for rss.
       res.type('application/rss+xml');
+      // Render RSS feed using the template in views/rss
       return res.render('rss', { items: posts });
     });
 });
