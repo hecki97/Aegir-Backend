@@ -26,6 +26,42 @@ app.use(express.json()); // to support JSON-encoded bodies
 
 app.set('view engine', 'pug');
 
+app.post('/bing/pic-of-the-day/update', async (req, res) => {
+  // Only proceed if the body holds a secret AND the secret matches *exactly* the stored secret!
+  if (!(req.body.secret && postSecret.localeCompare(req.body.secret) === 0)) {
+    res.status(401).end();
+  }
+
+  try {
+    // Request current version of the Bing RSS feed
+    const response = await superagent.get('https://www.bing.com/HPImageArchive.aspx').query({
+      format: 'js', idx: 0, n: 1, mkt: 'en-US',
+    });
+
+    // Extract image from response
+    const image = response.body.images[0];
+
+    // Create new instance of the Bing Picture of the Day schema
+    const potd = new BingPotD({
+      title: image.title,
+      description: image.copyright,
+      url: `https://www.bing.com${image.url}`,
+      copyright: image.copyrightlink,
+      hash: image.hsh,
+    });
+
+    // Insert into MongoDB
+    await potd.save();
+    // Close connection with status 200 (OK)
+    res.status(200).end();
+  } catch (err) {
+    // Log error to console
+    console.error(err);
+    // Close connection with status 500 (Internal Server Error)
+    res.status(500).end();
+  }
+});
+
 app.post('/bing/pic-of-the-day/feed', async (req, res) => {
   // Only proceed if the body holds a secret AND the secret matches *exactly* the stored secret!
   if (!(app.body.secret && postSecret.localeCompare(app.body.secret) === 0)) {
