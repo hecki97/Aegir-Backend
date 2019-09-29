@@ -1,8 +1,9 @@
 doctype xml
-rss(version='2.0')
+rss(version='2.0', xmlns:atom='http://www.w3.org/2005/Atom')
   channel
     title Bing Picture of the Day
-    link https://aegir-backend.herokuapp.com
+    link https://aegir-backend.herokuapp.com/bing-potd/feed
+    atom:link(href='https://aegir-backend.herokuapp.com/bing-potd/feed', rel='self', type='application/rss+xml')
     description Get the latest Bing picture of the day with this handsy RSS feed
     language en-US
     copyright This is a third-party app that is in no way affiliated with or endorsed by Microsoft or Bing
