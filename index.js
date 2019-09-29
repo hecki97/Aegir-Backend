@@ -29,7 +29,7 @@ app.set('view engine', 'pug');
 app.post('/bing/pic-of-the-day/update', async (req, res) => {
   // Only proceed if the body holds a secret AND the secret matches *exactly* the stored secret!
   if (!(req.body.secret && postSecret.localeCompare(req.body.secret) === 0)) {
-    res.status(401).end();
+    res.sendStatus(401);
   }
 
   try {
@@ -53,19 +53,19 @@ app.post('/bing/pic-of-the-day/update', async (req, res) => {
     // Insert into MongoDB
     await potd.save();
     // Close connection with status 200 (OK)
-    res.status(200).end();
+    res.sendStatus(200);
   } catch (err) {
     // Log error to console
     console.error(err);
     // Close connection with status 500 (Internal Server Error)
-    res.status(500).end();
+    res.sendStatus(500);
   }
 });
 
 app.post('/bing/pic-of-the-day/feed', async (req, res) => {
   // Only proceed if the body holds a secret AND the secret matches *exactly* the stored secret!
   if (!(app.body.secret && postSecret.localeCompare(app.body.secret) === 0)) {
-    res.status(401).end();
+    res.sendStatus(401);
   }
 
   const picOfTheDay = new BingPotD({
@@ -78,10 +78,10 @@ app.post('/bing/pic-of-the-day/feed', async (req, res) => {
 
   try {
     await picOfTheDay.save();
-    res.status(200).end();
+    res.sendStatus(200);
   } catch (err) {
     console.error(err);
-    res.status(500).end();
+    res.sendStatus(500);
   }
 });
 
@@ -93,7 +93,7 @@ app.get('/bing/pic-of-the-day/feed', cors({ methods: 'GET', origin: '*' }), (req
     .exec((err, posts) => {
       if (err) {
         console.error(err);
-        res.status(500).end();
+        res.sendStatus(500);
       }
 
       // Set appropriate conent type for rss.
