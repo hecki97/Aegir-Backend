@@ -64,7 +64,7 @@ app.post('/bing/pic-of-the-day/update', async (req, res) => {
 
 app.post('/bing/pic-of-the-day/feed', async (req, res) => {
   // Only proceed if the body holds a secret AND the secret matches *exactly* the stored secret!
-  if (!(app.body.secret && postSecret.localeCompare(app.body.secret) === 0)) {
+  if (!(req.body.secret && postSecret.localeCompare(req.body.secret) === 0)) {
     res.sendStatus(401);
   }
 
