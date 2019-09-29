@@ -11,7 +11,11 @@ rss(version='2.0')
     each item in items
       item
         title=item.title
-        link <a href="#{item.url}" rel="nofollow">#{item.url}</a>
-        description=item.description
+        link <a href="#{item.copyright}" rel="nofollow">#{item.url}</a>
+        description
+          | <![CDATA[
+          | #{item.description}
+          | <img src="#{item.url}">         
+          | ]> 
         pubDate=new Date(item.date).toUTCString()
         guid(isPermaLink='false')=item.hash
