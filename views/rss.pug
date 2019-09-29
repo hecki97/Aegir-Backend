@@ -2,7 +2,7 @@ doctype xml
 rss(version='2.0')
   channel
     title Bing Picture of the Day
-    link <a href="https://aegir-backend.herokuapp.com" rel="nofollow">https://aegir-backend.herokuapp.com</a>
+    link https://aegir-backend.herokuapp.com
     description Get the latest Bing picture of the day with this handsy RSS feed
     language en-US
     copyright This is a third-party app that is in no way affiliated with or endorsed by Microsoft or Bing
@@ -11,7 +11,7 @@ rss(version='2.0')
     each item in items
       item
         title=item.title
-        link <a href="#{item.copyright}" rel="nofollow">#{item.url}</a>
+        link=item.url
         description
           | <![CDATA[
           | #{item.description}
