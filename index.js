@@ -64,6 +64,13 @@ app.post('/bing/pic-of-the-day/update', async (req, res) => {
   }
 });
 
+app.post('/bing/pic-of-the-day/logger', (req, res) => {
+  console.log('body', req.body, '\n');
+  console.log('content', req.body.content, '\n');
+  console.log('imgurl', req.body.imgurl, '\n');
+  console.log('url', req.body.url, '\n');
+});
+
 app.post('/bing/pic-of-the-day/feed', async (req, res) => {
   // Only proceed if the body holds a secret AND the secret matches *exactly* the stored secret!
   if (!(req.body.secret && postSecret.localeCompare(req.body.secret) === 0)) {
