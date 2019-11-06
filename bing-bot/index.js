@@ -27,7 +27,7 @@ module.exports = async (potd) => {
       throw new Error('Variable base64EncodedImage cannot be undefined!');
     }
 
-    // Post image encoded image to Twitter
+    // Uploads encoded image on Twitter
     mediaUploadResponse = await twitter.post('media/upload', { media_data: base64EncodedImage });
   } catch (error) {
     throw new Error(`Failed to upload image because of this error: ${error}`);
@@ -38,8 +38,10 @@ module.exports = async (potd) => {
       throw new Error('Variable mediaUploadResponse cannot be undefined!');
     }
 
+    // Extract media id from media upload response
     mediaId = mediaUploadResponse.data.media_id_string;
 
+    // Upload image metadata to Twitter
     await twitter.post('media/metadata/create', {
       media_id: mediaId,
       alt_text: { text: potd.title },
@@ -53,7 +55,7 @@ module.exports = async (potd) => {
       throw new Error('Variable mediaId cannot be undefined!');
     }
 
-    // now we can reference the media and post a tweet (media will attach to the tweet)
+    // Create new Tweet by composing a status and referencing the previously uploaded image
     await twitter.post('statuses/update', {
       status: `${potd.title}\n${potd.description}\n${potd.copyright}`,
       media_ids: [mediaId],
