@@ -29,6 +29,9 @@ module.exports = async (req, res) => {
       hash: image.hsh,
     });
 
+    // Invoke Bing Bot
+    bingBot(potd);
+
     // Insert into MongoDB
     await potd.save();
     // Close connection with status 200 (OK)
